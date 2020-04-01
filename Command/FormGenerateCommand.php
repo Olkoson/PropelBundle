@@ -52,7 +52,7 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if ($schemas = $this->getSchemasFromBundle($this->bundle)) {
-            $schemas = $this->getFinalSchemas($this->getContainer()->get('kernel'));
+            $schemas = $this->getFinalSchemas($this->kernel);
 
             $transformer = new \XmlToAppData(null, null, 'UTF-8');
             foreach ($schemas as $fileName => $array) {

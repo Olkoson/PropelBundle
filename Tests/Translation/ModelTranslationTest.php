@@ -36,10 +36,16 @@ class ModelTranslationTest extends TestCase
         }
 
         $this->con = $builder->build();
+
+        date_default_timezone_set('UTC');
     }
 
     public function testRegisterResources()
     {
+        if(class_exists('Symfony\Component\Translation\Translator') === false) {
+            $this->markTestSkipped('symfony/translation component is not installed');
+        }
+
         $translation = new Entry();
         $translation
             ->setKey('example.key')
@@ -66,6 +72,10 @@ class ModelTranslationTest extends TestCase
 
     public function testIsFreshWithoutEntries()
     {
+        if(class_exists('Symfony\Component\Translation\Translator') === false) {
+            $this->markTestSkipped('symfony/translation component is not installed');
+        }
+
         $resource = $this->getResource();
 
         $this->assertTrue($resource->isFresh(date('U')));
@@ -73,6 +83,10 @@ class ModelTranslationTest extends TestCase
 
     public function testIsFreshUpdates()
     {
+        if(class_exists('Symfony\Component\Translation\Translator') === false) {
+            $this->markTestSkipped('symfony/translation component is not installed');
+        }
+
         $date = new \DateTime('-2 minutes');
 
         $translation = new Entry();
@@ -94,6 +108,10 @@ class ModelTranslationTest extends TestCase
 
     public function testLoadInvalidResource()
     {
+        if(class_exists('Symfony\Component\Translation\Translator') === false) {
+            $this->markTestSkipped('symfony/translation component is not installed');
+        }
+
         $invalidResource = $this->getMockBuilder('Symfony\Component\Config\Resource\ResourceInterface')->getMock();
 
         $resource = $this->getResource();
@@ -104,6 +122,10 @@ class ModelTranslationTest extends TestCase
 
     public function testLoadFiltersLocaleAndDomain()
     {
+        if(class_exists('Symfony\Component\Translation\Translator') === false) {
+            $this->markTestSkipped('symfony/translation component is not installed');
+        }
+
         $date = new \DateTime();
 
         $translation = new Entry();
@@ -155,6 +177,10 @@ class ModelTranslationTest extends TestCase
 
     public function testDump()
     {
+        if(class_exists('Symfony\Component\Translation\Translator') === false) {
+            $this->markTestSkipped('symfony/translation component is not installed');
+        }
+
         $catalogue = new MessageCatalogue('en_US', array(
             'test' => array(
                 'example.key' => 'This is an example translation.',

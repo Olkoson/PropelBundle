@@ -29,7 +29,7 @@ abstract class GeneratorAwareCommand extends AbstractCommand
 
     protected function loadPropelGenerator()
     {
-        $propelPath = $this->getContainer()->getParameter('propel.path');
+        $propelPath = $this->parameterBag->get('propel.path');
 
         require_once sprintf('%s/generator/lib/builder/util/XmlToAppData.php',   $propelPath);
         require_once sprintf('%s/generator/lib/config/GeneratorConfig.php',      $propelPath);
@@ -44,9 +44,9 @@ abstract class GeneratorAwareCommand extends AbstractCommand
             $transformer = new \XmlToAppData(null, null, 'UTF-8');
         }
 
-        $config      = new \QuickGeneratorConfig();
+        $config = new \QuickGeneratorConfig();
 
-        if (file_exists($propelIni = $this->getContainer()->getParameter('kernel.root_dir') . '/config/propel.ini')) {
+        if (file_exists($propelIni = $this->parameterBag->get('kernel.root_dir').'/config/propel.ini')) {
             foreach ($this->getProperties($propelIni) as $key => $value) {
                 if (0 === strpos($key, 'propel.')) {
                     $newKey = substr($key, strlen('propel.'));

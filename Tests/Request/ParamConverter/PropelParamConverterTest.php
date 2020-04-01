@@ -17,7 +17,7 @@ class PropelParamConverterTest extends TestCase
     {
         parent::setUp();
         if (!interface_exists('Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface')) {
-            $this->markTestSkipped('SensioFrameworkExtraBundle is not available.');
+            $this->markTestSkipped('sensio/framework-extra-bundle is not installed.');
         }
 
         \Propel::disableInstancePooling();

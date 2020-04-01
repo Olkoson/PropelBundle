@@ -30,9 +30,9 @@ class Configuration implements ConfigurationInterface
      *
      * @param Boolean $debug Wether to use the debug mode
      */
-    public function  __construct($debug)
+    public function __construct(bool $debug)
     {
-        $this->debug = (Boolean) $debug;
+        $this->debug = $debug;
     }
 
     /**
@@ -44,13 +44,7 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('propel');
 
-        if (method_exists($treeBuilder, 'getRootNode')) {
-            $rootNode = $treeBuilder->getRootNode();
-        } else {
-            // BC layer for symfony/config 4.1 and older
-            $rootNode = $treeBuilder->root('propel');
-        }
-
+        $rootNode = $treeBuilder->getRootNode();
         $this->addGeneralSection($rootNode);
         $this->addDbalSection($rootNode);
 
@@ -110,7 +104,7 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('dbal')
                 ->beforeNormalization()
                     ->ifNull()
-                    ->then(function($v) { return array ('connections' => array('default' => array())); })
+                    ->then(function() { return array ('connections' => array('default' => array())); })
                 ->end()
                 ->children()
                     ->scalarNode('default_connection')->defaultValue('default')->end()
@@ -176,12 +170,12 @@ class Configuration implements ConfigurationInterface
      *         attributes:  {}
      *         settings:    {}
      *
-     * @return \Symfony\Component\Config\Definition\Builder\TreeBuilder The tree builder
+     * @return \Symfony\Component\Config\Definition\Builder\NodeDefinition The tree builder
      */
     private function getDbalConnectionsNode()
     {
-        $treeBuilder = new TreeBuilder();
-        $node = $treeBuilder->root('connections');
+        $treeBuilder = new TreeBuilder('connections');
+        $node = $treeBuilder->getRootNode();
 
         $node
             ->requiresAtLeastOneElement()
@@ -264,15 +258,5 @@ class Configuration implements ConfigurationInterface
         ;
 
         return $node;
-    }
-
-    private function getRootNode(TreeBuilder $treeBuilder, $name)
-    {
-        // BC layer for symfony/config 4.1 and older
-        if ( ! \method_exists($treeBuilder, 'getRootNode')) {
-            return $treeBuilder->root($name);
-        }
-
-        return $treeBuilder->getRootNode();
     }
 }

@@ -1,4 +1,4 @@
-{% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
 
 {% block toolbar %}
 {% if collector.querycount %}
@@ -14,13 +14,13 @@
 
     {% set text %}{% endset %}
 
-    {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { link: profiler_url } %}
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: profiler_url, status: status|default('') }) }}
 {% endif %}
 {% endblock %}
 
 {% block menu %}
     <span class="label{{ 0 == collector.querycount ? ' disabled' }}">
-        <span class="icon"><img height="24" src="{{ asset('bundles/propel/images/profiler/propel.png') }}" alt="" /></span>
+        <span class="icon"><img height="24" src="data:image/png;base64,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" alt="" /></span>
         <strong>Propel</strong>
     </span>
 {% endblock %}
@@ -77,20 +77,20 @@
                 <td>
                     <a name="propel-query-{{ i }}" ></a>
                     <code>{{ query.sql|format_sql }}</code>
-                    {% if app.request.query.has('query') and app.request.query.get('query') == i %}
+                    {% if request.query.has('query') and request.query.get('query') == i %}
                         <div class="SQLExplain">
                         {{ render(controller('PropelBundle:Panel:explain', {
                             'token': token,
                             'panel': 'propel',
-                            'query': app.request.query.get('query'),
-                            'connection': app.request.query.get('connection')
+                            'query': request.query.get('query'),
+                            'connection': request.query.get('connection')
                         })) }}
                         </div>
                     {% endif %}
                     <div class="SQLInfo">
                         Time: {{ query.time }} - Memory: {{ query.memory }} - Connection: {{ query.connection }}
 
-                        {% if app.request.query.get('query', -1) != i %}
+                        {% if request.query.get('query', -1) != i %}
                             - <a href="{{ path('_profiler', {'panel': 'propel', 'token': token, 'connection': query.connection, 'query': i}) }}#propel-query-{{ i }}">Explain the query</a>
                         {% endif %}
                     </div>

@@ -87,18 +87,18 @@ EOT
     {
         try {
             $statusCode = $manager->insertSql($connectionName);
+
+            if (true === $statusCode) {
+                $output->writeln('<info>All SQL statements have been inserted.</info>');
+            } else {
+                $output->writeln('<comment>No SQL statements found.</comment>');
+            }
         } catch (\Exception $e) {
-            return $this->writeSection(
+            $this->writeSection(
                 $output,
                 array('[Propel] Exception', '', $e),
                 'fg=white;bg=red'
             );
-        }
-
-        if (true === $statusCode) {
-            $output->writeln('<info>All SQL statements have been inserted.</info>');
-        } else {
-            $output->writeln('<comment>No SQL statements found.</comment>');
         }
     }
 
@@ -107,10 +107,8 @@ EOT
      */
     protected function getConnections()
     {
-        $propelConfiguration = $this->getContainer()->get('propel.configuration');
-
         $connections = array();
-        foreach ($propelConfiguration['datasources'] as $name => $config) {
+        foreach ($this->propelConfiguration['datasources'] as $name => $config) {
             if (is_scalar($config)) {
                 continue;
             }

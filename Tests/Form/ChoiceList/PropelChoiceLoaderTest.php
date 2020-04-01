@@ -11,7 +11,7 @@ use Symfony\Component\Form\ChoiceList\Factory\ChoiceListFactoryInterface;
 /**
  * @author Jérémie Augustin <jeremie.augustin@pixel-cookers.com>
  */
-class PropelChoiceLoaderTest extends \PHPUnit_Framework_TestCase
+class PropelChoiceLoaderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ChoiceListFactoryInterface
