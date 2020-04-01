@@ -22,7 +22,29 @@ class FixturesLoadCommandTest extends TestCase
 
     public function setUp()
     {
-        $this->command = new TestableFixturesLoadCommand('testable-command');
+        $kernel = $this
+            ->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')
+            ->getMock();
+        $fileLocator = $this
+            ->getMockBuilder('Symfony\Component\Config\FileLocator')
+            ->getMock();
+        $parameterBag = $this
+            ->getMockBuilder('Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface')
+            ->getMock();
+        $buildProperties = $this
+            ->getMockBuilder('Propel\Bundle\PropelBundle\DependencyInjection\Properties')
+            ->getMock();
+        $propelConfig = $this
+            ->getMockBuilder('PropelConfiguration')
+            ->getMock();
+
+        $this->command = new TestableFixturesLoadCommand(
+            $kernel,
+            $fileLocator,
+            $parameterBag,
+            $buildProperties,
+            $propelConfig
+        );
 
         // let's create some dummy fixture files
         $this->fixturesDir   = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'propel';

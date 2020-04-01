@@ -20,6 +20,10 @@ class YamlDataLoaderTest extends TestCase
 {
     public function testYamlLoadOneToMany()
     {
+        if(!class_exists('Symfony\Component\Yaml\Yaml')) {
+            $this->markTestSkipped('symfony/yaml component is not installed');
+        }
+
         $fixtures = <<<YAML
 Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\BookAuthor:
     BookAuthor_1:
@@ -46,6 +50,10 @@ YAML;
 
     public function testYamlLoadManyToMany()
     {
+        if(!class_exists('Symfony\Component\Yaml\Yaml')) {
+            $this->markTestSkipped('symfony/yaml component is not installed');
+        }
+
         $schema = <<<XML
 <database name="default" package="vendor.bundles.Propel.PropelBundle.Tests.Fixtures.DataFixtures.Loader" namespace="Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader" defaultIdMethod="native">
     <table name="table_book" phpName="YamlManyToManyBook">
@@ -127,6 +135,10 @@ YAML;
 
     public function testYamlLoadManyToManyMultipleFiles()
     {
+        if(!class_exists('Symfony\Component\Yaml\Yaml')) {
+            $this->markTestSkipped('symfony/yaml component is not installed');
+        }
+
         $schema = <<<XML
 <database name="default" package="vendor.bundles.Propel.PropelBundle.Tests.Fixtures.DataFixtures.Loader" namespace="Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader" defaultIdMethod="native">
     <table name="table_book_multiple" phpName="YamlManyToManyMultipleFilesBook">
@@ -215,6 +227,10 @@ YAML;
 
     public function testLoadSelfReferencing()
     {
+        if(!class_exists('Symfony\Component\Yaml\Yaml')) {
+            $this->markTestSkipped('symfony/yaml component is not installed');
+        }
+
         $fixtures = <<<YAML
 Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\BookAuthor:
     BookAuthor_1:
@@ -242,6 +258,10 @@ YAML;
 
     public function testLoaderWithPhp()
     {
+        if(!class_exists('Symfony\Component\Yaml\Yaml')) {
+            $this->markTestSkipped('symfony/yaml component is not installed');
+        }
+
         $fixtures = <<<YAML
 Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\BookAuthor:
     BookAuthor_1:
@@ -266,6 +286,10 @@ YAML;
 
     public function testLoadWithoutFaker()
     {
+        if(!class_exists('Symfony\Component\Yaml\Yaml')) {
+            $this->markTestSkipped('symfony/yaml component is not installed');
+        }
+
         $fixtures = <<<YAML
 Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\BookAuthor:
     BookAuthor_1:
@@ -290,6 +314,10 @@ YAML;
 
     public function testLoadWithFaker()
     {
+        if(!class_exists('Symfony\Component\Yaml\Yaml')) {
+            $this->markTestSkipped('symfony/yaml component is not installed');
+        }
+
         if (!class_exists('Faker\Factory')) {
             $this->markTestSkipped('Faker is mandatory');
         }
@@ -323,6 +351,10 @@ YAML;
 
     public function testLoadWithFakerDateTime()
     {
+        if(!class_exists('Symfony\Component\Yaml\Yaml')) {
+            $this->markTestSkipped('symfony/yaml component is not installed');
+        }
+
         if (!class_exists('Faker\Factory')) {
             $this->markTestSkipped('Faker is mandatory');
         }
@@ -354,6 +386,10 @@ YAML;
 
     public function testLoadWithInheritedRelationship()
     {
+        if(!class_exists('Symfony\Component\Yaml\Yaml')) {
+            $this->markTestSkipped('symfony/yaml component is not installed');
+        }
+
         $schema = <<<XML
 <database name="default" package="vendor.bundles.Propel.PropelBundle.Tests.Fixtures.DataFixtures.Loader" namespace="Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader" defaultIdMethod="native">
 
@@ -411,6 +447,10 @@ YAML;
 
     public function testLoadWithInheritedManyToManyRelationship()
     {
+        if(!class_exists('Symfony\Component\Yaml\Yaml')) {
+            $this->markTestSkipped('symfony/yaml component is not installed');
+        }
+
         $schema = <<<XML
 <database name="default" package="vendor.bundles.Propel.PropelBundle.Tests.Fixtures.DataFixtures.Loader" namespace="Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader" defaultIdMethod="native">
 
@@ -486,6 +526,10 @@ YAML;
 
     public function testLoadArrayToObjectType()
     {
+        if(!class_exists('Symfony\Component\Yaml\Yaml')) {
+            $this->markTestSkipped('symfony/yaml component is not installed');
+        }
+
         $schema = <<<XML
 <database name="default" package="vendor.bundles.Propel.PropelBundle.Tests.Fixtures.DataFixtures.Loader" namespace="Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader" defaultIdMethod="native">
     <table name="table_book_with_object" phpName="YamlBookWithObject">
@@ -519,6 +563,10 @@ YAML;
 
     public function testLoadDelegatedOnPrimaryKey()
     {
+        if(!class_exists('Symfony\Component\Yaml\Yaml')) {
+            $this->markTestSkipped('symfony/yaml component is not installed');
+        }
+
         $schema = <<<XML
 <database name="default" package="vendor.bundles.Propel.PropelBundle.Tests.Fixtures.DataFixtures.Loader" namespace="Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader" defaultIdMethod="native">
     <table name="yaml_delegate_on_primary_key_person" phpName="YamlDelegateOnPrimaryKeyPerson">

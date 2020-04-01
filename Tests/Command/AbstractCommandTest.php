@@ -7,39 +7,52 @@
  *
  * @license    MIT License
  */
+
 namespace Propel\Bundle\PropelBundle\Tests\Command;
 
 use Propel\Bundle\PropelBundle\Command\AbstractCommand;
 use Propel\Bundle\PropelBundle\Tests\TestCase;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * @author William Durand <william.durand1@gmail.com>
  */
-class AbstractCommandTest extends TestCase
+final class AbstractCommandTest extends TestCase
 {
     /**
      * @var TestableAbstractCommand
      */
-    protected $command;
+    private $command;
 
     /**
      * @var \Symfony\Component\Config\FileLocator|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $fileLocator;
+    private $fileLocator;
 
     public function setUp()
     {
-        $this->command = new TestableAbstractCommand('testable-command');
-        $this->fileLocator = $this->getMockBuilder('Symfony\Component\Config\FileLocator')
-            ->setMethods(array(
-                'locate'
-            ))
+        $this->fileLocator = $this->createPartialMock('Symfony\Component\Config\FileLocator', ['locate']);
+
+        $kernel = $this
+            ->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')
+            ->getMock();
+        $parameterBag = $this
+            ->getMockBuilder('Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface')
+            ->getMock();
+        $buildProperties = $this
+            ->getMockBuilder('Propel\Bundle\PropelBundle\DependencyInjection\Properties')
+            ->getMock();
+        $propelConfig = $this->getMockBuilder('PropelConfiguration')
             ->getMock();
 
-        $this->command->setFileLocator($this->fileLocator);
+        $this->command = new TestableAbstractCommand(
+            $kernel,
+            $this->fileLocator,
+            $parameterBag,
+            $buildProperties,
+            $propelConfig
+        );
     }
 
     public function testParseDbName()
@@ -55,8 +68,8 @@ class AbstractCommandTest extends TestCase
 
     public function testTransformToLogicalName()
     {
-        $bundleDir = realpath(__DIR__ . '/../Fixtures/src/My/SuperBundle');
-        $filename = 'Resources' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'a-schema.xml';
+        $bundleDir = realpath(__DIR__.'/../Fixtures/src/My/SuperBundle');
+        $filename = 'Resources'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'a-schema.xml';
 
         $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
         $bundle
@@ -68,15 +81,15 @@ class AbstractCommandTest extends TestCase
             ->method('getPath')
             ->will($this->returnValue($bundleDir));
 
-        $schema = new \SplFileInfo($bundleDir . DIRECTORY_SEPARATOR . $filename);
+        $schema = new \SplFileInfo($bundleDir.DIRECTORY_SEPARATOR.$filename);
         $expected = '@MySuperBundle/Resources/config/a-schema.xml';
         $this->assertEquals($expected, $this->command->transformToLogicalName($schema, $bundle));
     }
 
     public function testTransformToLogicalNameWithSubDir()
     {
-        $bundleDir = realpath(__DIR__ . '/../Fixtures/src/My/ThirdBundle');
-        $filename = 'Resources' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'propel' . DIRECTORY_SEPARATOR . 'schema.xml';
+        $bundleDir = realpath(__DIR__.'/../Fixtures/src/My/ThirdBundle');
+        $filename = 'Resources'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'propel'.DIRECTORY_SEPARATOR.'schema.xml';
 
         $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
         $bundle
@@ -88,8 +101,8 @@ class AbstractCommandTest extends TestCase
             ->method('getPath')
             ->will($this->returnValue($bundleDir));
 
-        $schema = new \SplFileInfo($bundleDir . DIRECTORY_SEPARATOR . $filename);
-        $expected = '@MyThirdBundle/Resources/config/propel/schema.xml';
+        $schema = new \SplFileInfo($bundleDir.DIRECTORY_SEPARATOR.$filename);
+        $expected = sprintf('@MyThirdBundle/Resources/config/propel%sschema.xml', DIRECTORY_SEPARATOR);
         $this->assertEquals($expected, $this->command->transformToLogicalName($schema, $bundle));
     }
 
@@ -103,9 +116,9 @@ class AbstractCommandTest extends TestCase
         $bundle
             ->expects($this->exactly(2))
             ->method('getPath')
-            ->will($this->returnValue(__DIR__ . '/../Fixtures/src/My/SuperBundle'));
+            ->will($this->returnValue(__DIR__.'/../Fixtures/src/My/SuperBundle'));
 
-        $aSchema = realpath(__DIR__ . '/../Fixtures/src/My/SuperBundle/Resources/config/a-schema.xml');
+        $aSchema = realpath(__DIR__.'/../Fixtures/src/My/SuperBundle/Resources/config/a-schema.xml');
 
         $this->fileLocator
             ->expects(self::atLeastOnce())
@@ -128,7 +141,7 @@ class AbstractCommandTest extends TestCase
         $bundle
             ->expects($this->once())
             ->method('getPath')
-            ->will($this->returnValue(__DIR__ . '/../Fixtures/src/My/SecondBundle'));
+            ->will($this->returnValue(__DIR__.'/../Fixtures/src/My/SecondBundle'));
 
         $schemas = $this->command->getSchemasFromBundle($bundle);
 
@@ -145,7 +158,7 @@ class AbstractCommandTest extends TestCase
         $bundle
             ->expects($this->once())
             ->method('getPath')
-            ->will($this->returnValue(__DIR__ . '/../Fixtures/src/My/SecondBundle'));
+            ->will($this->returnValue(__DIR__.'/../Fixtures/src/My/SecondBundle'));
 
         $kernel
             ->expects($this->once())
@@ -171,9 +184,9 @@ class AbstractCommandTest extends TestCase
         $bundle
             ->expects($this->exactly(2))
             ->method('getPath')
-            ->will($this->returnValue(__DIR__ . '/../Fixtures/src/My/SuperBundle'));
+            ->will($this->returnValue(__DIR__.'/../Fixtures/src/My/SuperBundle'));
 
-        $aSchema = realpath(__DIR__ . '/../Fixtures/src/My/SuperBundle/Resources/config/a-schema.xml');
+        $aSchema = realpath(__DIR__.'/../Fixtures/src/My/SuperBundle/Resources/config/a-schema.xml');
 
         $this->fileLocator
             ->expects(self::atLeastOnce())
@@ -207,9 +220,9 @@ class AbstractCommandTest extends TestCase
         $bundle
             ->expects($this->exactly(2))
             ->method('getPath')
-            ->will($this->returnValue(__DIR__ . '/../Fixtures/src/My/SuperBundle'));
+            ->will($this->returnValue(__DIR__.'/../Fixtures/src/My/SuperBundle'));
 
-        $aSchema = realpath(__DIR__ . '/../Fixtures/src/My/SuperBundle/Resources/config/a-schema.xml');
+        $aSchema = realpath(__DIR__.'/../Fixtures/src/My/SuperBundle/Resources/config/a-schema.xml');
 
         $this->fileLocator
             ->expects(self::atLeastOnce())

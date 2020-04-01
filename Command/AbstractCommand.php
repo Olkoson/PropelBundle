@@ -9,11 +9,14 @@
  */
 namespace Propel\Bundle\PropelBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Propel\Bundle\PropelBundle\DependencyInjection\Properties;
+use PropelConfiguration;
 use Symfony\Component\Config\FileLocatorInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -26,7 +29,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
  * @author Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author William DURAND <william.durand1@gmail.com>
  */
-abstract class AbstractCommand extends ContainerAwareCommand
+abstract class AbstractCommand extends Command
 {
     /**
      * Additional Phing args to add in specialized commands.
@@ -75,13 +78,46 @@ abstract class AbstractCommand extends ContainerAwareCommand
     protected $fileLocator;
 
     /**
-     * Set relation on FileLocator
-     *
-     * @param \Symfony\Component\Config\FileLocatorInterface $fileLocator
+     * @var \Symfony\Component\HttpKernel\KernelInterface
      */
-    public function setFileLocator(FileLocatorInterface $fileLocator)
-    {
+    protected $kernel;
+
+    /**
+     * @var \Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface
+     */
+    protected $parameterBag;
+
+    /**
+     * @var \PropelConfiguration
+     */
+    protected $propelConfiguration;
+
+    /**
+     * @var \Propel\Bundle\PropelBundle\DependencyInjection\Properties
+     */
+    protected $buildProperties;
+
+    /**
+     * @param \Symfony\Component\HttpKernel\KernelInterface $kernel
+     * @param \Symfony\Component\Config\FileLocatorInterface $fileLocator
+     * @param \Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface $parameterBag
+     * @param \Propel\Bundle\PropelBundle\DependencyInjection\Properties $buildProperties
+     * @param \PropelConfiguration $propelConfiguration
+     */
+    public function __construct(
+        KernelInterface $kernel,
+        FileLocatorInterface $fileLocator,
+        ParameterBagInterface $parameterBag,
+        Properties $buildProperties,
+        PropelConfiguration $propelConfiguration
+    ) {
+        $this->kernel = $kernel;
         $this->fileLocator = $fileLocator;
+        $this->parameterBag = $parameterBag;
+        $this->buildProperties = $buildProperties;
+        $this->propelConfiguration = $propelConfiguration;
+
+        parent::__construct();
     }
 
     /**
@@ -152,7 +188,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
                 $bundleName = substr($bundleName, 1);
             }
 
-            $this->bundle = $this->getContainer()->get('kernel')->getBundle($bundleName);
+            $this->bundle = $this->kernel->getBundle($bundleName);
         }
     }
 
@@ -161,11 +197,12 @@ abstract class AbstractCommand extends ContainerAwareCommand
      *
      * @param string $taskName A Propel task name.
      * @param array $properties An array of properties to pass to Phing.
+     * @return bool
      */
     protected function callPhing($taskName, $properties = array())
     {
         /** @var KernelInterface $kernel */
-        $kernel = $this->getApplication()->getKernel();
+        $kernel = $this->kernel;
 
         if (isset($properties['propel.schema.dir'])) {
             $this->cacheDir = $properties['propel.schema.dir'];
@@ -186,7 +223,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
         $this->createBuildTimeFile($this->cacheDir.'/buildtime-conf.xml');
 
         // Verbosity
-        $bufferPhingOutput = $this->getContainer()->getParameter('kernel.debug');
+        $bufferPhingOutput = $this->parameterBag->get('kernel.debug');
 
         // Phing arguments
         $args = $this->getPhingArguments($kernel, $this->cacheDir, $properties);
@@ -363,7 +400,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
     protected function getRelativeFileName(\SplFileInfo $file)
     {
         return substr(
-            str_replace(realpath($this->getContainer()->getParameter('kernel.root_dir').'/../'), '', $file),
+            str_replace(realpath($this->parameterBag->get('kernel.root_dir').'/../'), '', $file),
             1
         );
     }
@@ -393,12 +430,6 @@ abstract class AbstractCommand extends ContainerAwareCommand
      */
     protected function createBuildTimeFile($file)
     {
-        $container = $this->getContainer();
-
-        if (!$container->has('propel.configuration')) {
-            throw new \InvalidArgumentException('Could not find Propel configuration.');
-        }
-
         $xml = strtr(
             <<<EOT
 <?xml version="1.0"?>
@@ -408,11 +439,10 @@ abstract class AbstractCommand extends ContainerAwareCommand
 
 EOT
             ,
-            array('%default_connection%' => $container->getParameter('propel.dbal.default_connection'))
+            array('%default_connection%' => $this->parameterBag->get('propel.dbal.default_connection'))
         );
 
-        $propelConfiguration = $container->get('propel.configuration');
-        foreach ($propelConfiguration['datasources'] as $name => $datasource) {
+        foreach ($this->propelConfiguration['datasources'] as $name => $datasource) {
             if (is_scalar($datasource)) {
                 continue;
             }
@@ -518,13 +548,12 @@ EOT;
      */
     protected function getConnection(InputInterface $input, OutputInterface $output)
     {
-        $propelConfiguration = $this->getContainer()->get('propel.configuration');
-        $name = $input->getOption('connection') ?: $this->getContainer()->getParameter(
+        $name = $input->getOption('connection') ?: $this->parameterBag->get(
             'propel.dbal.default_connection'
         );
 
-        if (isset($propelConfiguration['datasources'][$name])) {
-            $defaultConfig = $propelConfiguration['datasources'][$name];
+        if (isset($this->propelConfiguration['datasources'][$name])) {
+            $defaultConfig = $this->propelConfiguration['datasources'][$name];
         } else {
             throw new \InvalidArgumentException(sprintf('Connection named %s doesn\'t exist', $name));
         }
@@ -572,7 +601,7 @@ EOT;
      */
     protected function checkConfiguration()
     {
-        $parameters = $this->getContainer()->get('propel.configuration')->getParameters();
+        $parameters = $this->propelConfiguration->getParameters();
 
         if (!isset($parameters['datasources']) || 0 === count($parameters['datasources'])) {
             throw new \RuntimeException('Propel should be configured (no database configuration found).');
@@ -667,6 +696,7 @@ EOT;
      * @param OutputInterface $output The output.
      * @param string $question A given question.
      * @param boolean $default A default response.
+     * @return mixed
      */
     protected function askConfirmation(OutputInterface $output, $question, $default = false)
     {
@@ -721,7 +751,7 @@ EOT;
         // Adding user defined properties from the configuration
         $properties = array_merge(
             $properties,
-            $this->getContainer()->get('propel.build_properties')->getProperties()
+            $this->buildProperties->getProperties()
         );
 
         foreach ($properties as $key => $value) {
@@ -730,7 +760,7 @@ EOT;
 
         // Build file
         $args[] = '-f';
-        $args[] = realpath($this->getContainer()->getParameter('propel.path').'/generator/build.xml');
+        $args[] = realpath($this->parameterBag->get('propel.path').'/generator/build.xml');
 
         return $args;
     }

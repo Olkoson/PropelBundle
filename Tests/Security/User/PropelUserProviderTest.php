@@ -44,6 +44,10 @@ SCHEMA;
 
     public function testRefreshUserGetsUserByPrimaryKey()
     {
+        if(interface_exists('Symfony\Component\Security\Core\User\UserInterface') === false) {
+            $this->markTestSkipped('symfony/security-core component is not installed');
+        }
+
         $user1 = new User();
         $user1->setUsername('user1');
         $user1->save();

@@ -20,6 +20,10 @@ class YamlDataDumperTest extends TestCase
 {
     public function testYamlDump()
     {
+        if(!class_exists('Symfony\Component\Yaml\Yaml')) {
+            $this->markTestSkipped('symfony/yaml component is not installed');
+        }
+
         $author = new \Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\BookAuthor();
         $author->setName('A famous one')->save($this->con);
 

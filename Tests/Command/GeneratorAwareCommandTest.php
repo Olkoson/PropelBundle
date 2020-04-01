@@ -7,32 +7,51 @@
  *
  * @license    MIT License
  */
+
 namespace Propel\Bundle\PropelBundle\Tests\Command;
 
 use Propel\Bundle\PropelBundle\Command\GeneratorAwareCommand;
 use Propel\Bundle\PropelBundle\Tests\TestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
 /**
  * @author William Durand <william.durand1@gmail.com>
  */
 class GeneratorAwareCommandTest extends TestCase
 {
-    protected $container;
-
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->container = $this->getContainer();
-        $this->container->setParameter('propel.path',  __DIR__ . '/../../vendor/propel/propel1');
-    }
-
     public function testGetDatabasesFromSchema()
     {
-        $command = new GeneratorAwareCommandTestable('testable-command');
-        $command->setContainer($this->container);
-        $databases = $command->getDatabasesFromSchema(new \SplFileInfo(__DIR__ . '/../Fixtures/schema.xml'));
+        $kernel = $this
+            ->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')
+            ->getMock();
+        $fileLocator = $this
+            ->getMockBuilder('Symfony\Component\Config\FileLocator')
+            ->getMock();
+
+        $parameterBag = new ParameterBag(
+            [
+                'kernel.debug' => false,
+                'kernel.root_dir' => __DIR__.'/../',
+                'propel.path' => __DIR__.'/../../vendor/propel/propel1'
+            ]
+        );
+
+        $buildProperties = $this
+            ->getMockBuilder('Propel\Bundle\PropelBundle\DependencyInjection\Properties')
+            ->getMock();
+        $propelConfig = $this
+            ->getMockBuilder('PropelConfiguration')
+            ->getMock();
+
+        $command = new GeneratorAwareCommandTestable(
+            $kernel,
+            $fileLocator,
+            $parameterBag,
+            $buildProperties,
+            $propelConfig
+        );
+
+        $databases = $command->getDatabasesFromSchema(new \SplFileInfo(__DIR__.'/../Fixtures/schema.xml'));
 
         $this->assertTrue(is_array($databases));
 
@@ -51,18 +70,6 @@ class GeneratorAwareCommandTest extends TestCase
 
 class GeneratorAwareCommandTestable extends GeneratorAwareCommand
 {
-    protected $container;
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
     public function getDatabasesFromSchema(\SplFileInfo $file, \XmlToAppData $transformer = null)
     {
         $this->loadPropelGenerator();

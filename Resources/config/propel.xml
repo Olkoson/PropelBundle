@@ -18,8 +18,12 @@
 
     <services>
         <service id="propel.configuration" class="%propel.configuration.class%" public="true" />
-
+        <service id="PropelConfiguration" alias="propel.configuration" />
         <service id="propel.build_properties" class="%propel.build_properties.class%" public="true" />
+
+        <prototype namespace="Propel\Bundle\PropelBundle\Controller\" resource="../../Controller" autowire="true" autoconfigure="true">
+            <tag name="controller.service_arguments"/>
+        </prototype>
 
         <service id="propel.logger" class="%propel.logger.class%" public="true">
             <tag name="monolog.logger" channel="propel" />
@@ -28,7 +32,7 @@
         </service>
 
         <service id="propel.data_collector" class="%propel.data_collector.class%" public="false">
-            <tag name="data_collector" template="PropelBundle:Collector:propel" id="propel" />
+            <tag name="data_collector" template="@Propel/Collector/propel.html.twig" id="propel" />
             <argument type="service" id="propel.logger" />
             <argument type="service" id="propel.configuration" />
         </service>

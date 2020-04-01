@@ -7,6 +7,7 @@
  *
  * @license    MIT License
  */
+
 namespace Propel\Bundle\PropelBundle\Tests\Command;
 
 use Propel\Bundle\PropelBundle\Command\DatabaseCreateCommand;
@@ -22,7 +23,29 @@ class DatabaseCreateCommandTest extends TestCase
 
     public function setUp()
     {
-        $this->command = new TestableDatabaseCreateCommand();
+        $kernel = $this
+            ->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')
+            ->getMock();
+        $fileLocator = $this
+            ->getMockBuilder('Symfony\Component\Config\FileLocator')
+            ->getMock();
+        $parameterBag = $this
+            ->getMockBuilder('Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface')
+            ->getMock();
+        $buildProperties = $this
+            ->getMockBuilder('Propel\Bundle\PropelBundle\DependencyInjection\Properties')
+            ->getMock();
+        $propelConfig = $this
+            ->getMockBuilder('PropelConfiguration')
+            ->getMock();
+
+        $this->command = new TestableDatabaseCreateCommand(
+            $kernel,
+            $fileLocator,
+            $parameterBag,
+            $buildProperties,
+            $propelConfig
+        );
     }
 
     public function tearDown()
