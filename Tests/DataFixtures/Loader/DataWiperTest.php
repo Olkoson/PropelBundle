@@ -14,7 +14,7 @@ use Propel\Bundle\PropelBundle\Tests\DataFixtures\TestCase;
 /**
  * @author Toni Uebernickel <tuebernickel@gmail.com>
  */
-class DataWiperTest extends TestCase
+final class DataWiperTest extends TestCase
 {
     public function testWipesExistingData()
     {

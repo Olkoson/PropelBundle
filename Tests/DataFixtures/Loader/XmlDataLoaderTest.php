@@ -16,7 +16,7 @@ use Propel\Bundle\PropelBundle\Tests\DataFixtures\TestCase;
  * @author William Durand <william.durand1@gmail.com>
  * @author Toni Uebernickel <tuebernickel@gmail.com>
  */
-class XmlDataLoaderTest extends TestCase
+final class XmlDataLoaderTest extends TestCase
 {
     public function testXmlLoad()
     {

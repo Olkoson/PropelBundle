@@ -21,14 +21,14 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Guess\Guess;
 
-class PropelTypeGuesserTest extends TestCase
+final class PropelTypeGuesserTest extends TestCase
 {
     const CLASS_NAME = 'Propel\Bundle\PropelBundle\Tests\Fixtures\Item';
     const UNKNOWN_CLASS_NAME = 'Propel\Bundle\PropelBundle\Tests\Fixtures\UnknownItem';
 
     private $guesser;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->guesser = new PropelTypeGuesser();
     }

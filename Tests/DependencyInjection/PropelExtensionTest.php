@@ -12,7 +12,7 @@ namespace Propel\Bundle\PropelBundle\Tests\DependencyInjection;
 use Propel\Bundle\PropelBundle\DependencyInjection\PropelExtension;
 use Propel\Bundle\PropelBundle\Tests\TestCase;
 
-class PropelExtensionTest extends TestCase
+final class PropelExtensionTest extends TestCase
 {
     public function testLoad()
     {

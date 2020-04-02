@@ -15,7 +15,7 @@ use Propel\Bundle\PropelBundle\Util\PropelInflector;
 /**
  * @author William Durand <william.durand1@gmail.com>
  */
-class PropelInflectorTest extends TestCase
+final class PropelInflectorTest extends TestCase
 {
     /**
      * @dataProvider dataProviderForTestCamelize

@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 /**
  * @author William Durand <william.durand1@gmail.com>
  */
-class GeneratorAwareCommandTest extends TestCase
+final class GeneratorAwareCommandTest extends TestCase
 {
     public function testGetDatabasesFromSchema()
     {

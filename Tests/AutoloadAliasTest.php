@@ -2,7 +2,7 @@
 
 namespace Propel\Bundle\PropelBundle\Tests;
 
-class AutoloadAliasTest extends \PHPUnit\Framework\TestCase
+final class AutoloadAliasTest extends \PHPUnit\Framework\TestCase
 {
     public function testOldNamespaceWorks()
     {

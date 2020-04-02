@@ -16,7 +16,7 @@ use Propel\Bundle\PropelBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class PropelDataCollectorTest extends TestCase
+final class PropelDataCollectorTest extends TestCase
 {
     public function testCollectWithoutData()
     {

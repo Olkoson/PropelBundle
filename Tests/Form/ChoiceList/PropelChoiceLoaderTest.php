@@ -11,7 +11,7 @@ use Symfony\Component\Form\ChoiceList\Factory\ChoiceListFactoryInterface;
 /**
  * @author Jérémie Augustin <jeremie.augustin@pixel-cookers.com>
  */
-class PropelChoiceLoaderTest extends \PHPUnit\Framework\TestCase
+final class PropelChoiceLoaderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ChoiceListFactoryInterface
@@ -31,7 +31,7 @@ class PropelChoiceLoaderTest extends \PHPUnit\Framework\TestCase
 
     private $obj3;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->factory = $this->getMockBuilder('Symfony\Component\Form\ChoiceList\Factory\ChoiceListFactoryInterface')->getMock();
         $this->class = Book::class;
