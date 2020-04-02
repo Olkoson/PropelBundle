@@ -52,7 +52,7 @@ class PropelDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, \Throwable $exception = null)
     {
         $this->data = array(
             'queries' => $this->buildQueries(),
@@ -61,9 +61,7 @@ class PropelDataCollector extends DataCollector
     }
 
     /**
-     * Returns the collector name.
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function getName()
     {
@@ -146,7 +144,7 @@ class PropelDataCollector extends DataCollector
     }
 
     /**
-     * Resets this data collector to its initial state.
+     * {@inheritDoc}
      */
     public function reset()
     {
