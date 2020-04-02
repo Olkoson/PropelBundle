@@ -16,12 +16,12 @@ use Propel\Bundle\PropelBundle\Tests\TestCase;
 /**
  * @author Warnar Boekkooi <warnar@boekkooi.net>
  */
-class DatabaseCreateCommandTest extends TestCase
+final class DatabaseCreateCommandTest extends TestCase
 {
     /** @var TestableDatabaseCreateCommand */
     protected $command;
 
-    public function setUp()
+    public function setUp(): void
     {
         $kernel = $this
             ->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')
@@ -48,7 +48,7 @@ class DatabaseCreateCommandTest extends TestCase
         );
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->command = null;
     }

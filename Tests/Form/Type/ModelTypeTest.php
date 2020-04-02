@@ -7,6 +7,7 @@
  *
  * @license    MIT License
  */
+
 namespace Propel\Bundle\PropelBundle\Tests\Form\Type;
 
 use Propel\Bundle\PropelBundle\Form\PropelExtension;
@@ -19,7 +20,7 @@ use Symfony\Component\Form\Test\TypeTestCase;
 /**
  * @covers \Propel\Bundle\PropelBundle\Form\Type\ModelType
  */
-class ModelTypeTest extends TypeTestCase
+final class ModelTypeTest extends TypeTestCase
 {
     const TESTED_TYPE = 'Propel\Bundle\PropelBundle\Form\Type\ModelType';
 
@@ -39,7 +40,7 @@ class ModelTypeTest extends TypeTestCase
     protected $choices;
 
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -66,11 +67,10 @@ class ModelTypeTest extends TypeTestCase
         return array(new PropelExtension());
     }
 
-    /**
-     * @expectedException Symfony\Component\OptionsResolver\Exception\MissingOptionsException
-     */
     public function testEmptyClassExpectations()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\MissingOptionsException::class);
+
         $form = $this->factory->create(
             static::TESTED_TYPE,
             null,
@@ -80,11 +80,10 @@ class ModelTypeTest extends TypeTestCase
         );
     }
 
-    /**
-     * @expectedException Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
-     */
     public function testInvalidClassTypeExpectations()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
+
         $form = $this->factory->create(
             static::TESTED_TYPE,
             null,

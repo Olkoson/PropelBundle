@@ -16,11 +16,26 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * @author Kévin Gomez <contact@kevingomez.fr>
  */
-class FixturesLoadCommandTest extends TestCase
+final class FixturesLoadCommandTest extends TestCase
 {
     protected $command;
 
-    public function setUp()
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
+     * @var array
+     */
+    private $fixturesFiles;
+
+    /**
+     * @var string
+     */
+    private $fixturesDir;
+
+    public function setUp(): void
     {
         $kernel = $this
             ->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')
@@ -62,7 +77,7 @@ class FixturesLoadCommandTest extends TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->filesystem->remove($this->fixturesDir);
     }

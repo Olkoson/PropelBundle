@@ -16,7 +16,7 @@ use Propel\Bundle\PropelBundle\Tests\DataFixtures\TestCase;
  * @author William Durand <william.durand1@gmail.com>
  * @author Toni Uebernickel <tuebernickel@gmail.com>
  */
-class YamlDataLoaderTest extends TestCase
+final class YamlDataLoaderTest extends TestCase
 {
     public function testYamlLoadOneToMany()
     {

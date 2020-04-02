@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
  */
 class TestCase extends \PHPUnit\Framework\TestCase
 {
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         if (!file_exists($file = __DIR__ . '/../vendor/propel/propel1/runtime/lib/Propel.php')) {
             self::markTestSkipped('Propel is not available.');

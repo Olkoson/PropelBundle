@@ -28,7 +28,7 @@ class TestCase extends BaseTestCase
      */
     protected $tmpFiles = array();
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -10,9 +10,9 @@ use Symfony\Component\Translation\MessageCatalogue;
 /**
  * @author Toni Uebernickel <tuebernickel@gmail.com>
  *
- * @covers Propel\Bundle\PropelBundle\Translation\ModelTranslation
+ * @covers \Propel\Bundle\PropelBundle\Translation\ModelTranslation
  */
-class ModelTranslationTest extends TestCase
+final class ModelTranslationTest extends TestCase
 {
     const MODEL_CLASS = 'Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Translation';
 
@@ -21,7 +21,7 @@ class ModelTranslationTest extends TestCase
      */
     protected $con;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
