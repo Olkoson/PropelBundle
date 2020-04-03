@@ -64,7 +64,7 @@ XML;
         $this->con = $builder->build();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         foreach ($this->tmpFiles as $eachFile) {
             @unlink($eachFile);

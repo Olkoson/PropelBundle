@@ -33,7 +33,7 @@ final class PropelTypeGuesserTest extends TestCase
         $this->guesser = new PropelTypeGuesser();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->guesser = null;
     }
