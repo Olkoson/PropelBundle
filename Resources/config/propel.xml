@@ -52,9 +52,11 @@
         <service id="propel.security.user.provider" class="%propel.security.user.provider.class%" abstract="true" public="false" />
 
         <service id="Propel\Bundle\PropelBundle\Command\AbstractCommand" abstract="true">
-            <call method="setFileLocator">
-                <argument type="service" id="file_locator" />
-            </call>
+            <argument type="service" id="kernel" />
+            <argument type="service" id="file_locator" />
+            <argument type="service" id="parameter_bag" />
+            <argument type="service" id="propel.build_properties" />
+            <argument type="service" id="propel.configuration" />
         </service>
 
         <service id="propel.build_command" class="Propel\Bundle\PropelBundle\Command\BuildCommand"
