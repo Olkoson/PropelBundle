@@ -51,7 +51,7 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if ($input->getOption('force')) {
-            if ('prod' === $this->getApplication()->getKernel()->getEnvironment()) {
+            if ('prod' === $this->kernel->getEnvironment()) {
                 $this->writeSection($output, 'WARNING: you are about to drop a database in production !', 'bg=red;fg=white');
 
                 if (false === $this->askConfirmation($output, 'Are you sure ? (y/n) ', false)) {

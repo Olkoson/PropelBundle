@@ -43,7 +43,7 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $kernel = $this->getApplication()->getKernel();
+        $kernel = $this->kernel;
         $dest = $this->getConfigDir($kernel).($this->isFlex($kernel) ? '' : DIRECTORY_SEPARATOR.'..').'/propel/graph/';
 
         $this->callPhing('graphviz', array(

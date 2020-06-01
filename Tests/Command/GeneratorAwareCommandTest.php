@@ -22,8 +22,14 @@ final class GeneratorAwareCommandTest extends TestCase
     public function testGetDatabasesFromSchema()
     {
         $kernel = $this
-            ->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')
+            ->getMockBuilder('Symfony\Component\HttpKernel\Kernel')
+            ->disableOriginalConstructor()
+            ->onlyMethods(array('getProjectDir', 'registerBundles', 'registerContainerConfiguration'))
             ->getMock();
+
+        $kernel->method('getProjectDir')
+            ->willReturn('.');
+
         $fileLocator = $this
             ->getMockBuilder('Symfony\Component\Config\FileLocator')
             ->getMock();
@@ -31,7 +37,8 @@ final class GeneratorAwareCommandTest extends TestCase
         $parameterBag = new ParameterBag(
             [
                 'kernel.debug' => false,
-                'kernel.root_dir' => __DIR__.'/../',
+                'kernel.root_dir' => dirname(__DIR__),
+                'kernel.project_dir' => __DIR__,
                 'propel.path' => __DIR__.'/../../vendor/propel/propel1'
             ]
         );
@@ -51,7 +58,7 @@ final class GeneratorAwareCommandTest extends TestCase
             $propelConfig
         );
 
-        $databases = $command->getDatabasesFromSchema(new \SplFileInfo(__DIR__.'/../Fixtures/schema.xml'));
+        $databases = $command->getDatabasesFromSchema(new \SplFileInfo(dirname(__DIR__).'/Fixtures/schema.xml'));
 
         $this->assertTrue(is_array($databases));
 

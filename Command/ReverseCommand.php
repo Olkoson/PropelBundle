@@ -64,9 +64,8 @@ EOT
             $generated  = $this->getCacheDir().'/schema.xml';
             $filename   = $name . '_reversed_schema.xml';
 
-            $kernel = $this->getApplication()->getKernel();
-            $destFile = $this->getConfigDir($kernel)
-                .($this->isFlex($kernel) ? '' : DIRECTORY_SEPARATOR.'..')
+            $destFile = $this->getConfigDir($this->kernel)
+                .($this->isFlex($this->kernel) ? '' : DIRECTORY_SEPARATOR.'..')
                 .'/propel/generated-schemas/'.$filename;
 
             if (file_exists($generated)) {

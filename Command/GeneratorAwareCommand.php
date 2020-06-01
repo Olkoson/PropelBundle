@@ -47,9 +47,7 @@ abstract class GeneratorAwareCommand extends AbstractCommand
 
         $config = new \QuickGeneratorConfig();
 
-        $kernel = $this->getApplication()->getKernel();
-
-        $propelIni = $this->getConfigDir($kernel).DIRECTORY_SEPARATOR.'propel.ini';
+        $propelIni = $this->getConfigDir($this->kernel).DIRECTORY_SEPARATOR.'propel.ini';
 
         if (file_exists($propelIni)) {
             foreach ($this->getProperties($propelIni) as $key => $value) {
