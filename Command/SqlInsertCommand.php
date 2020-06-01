@@ -64,7 +64,7 @@ EOT
             } else {
                 foreach ($connections as $name => $config) {
                     $output->writeln(sprintf('Use connection named <comment>%s</comment> in <comment>%s</comment> environment.',
-                        $name, $this->getApplication()->getKernel()->getEnvironment()));
+                        $name, $this->kernel->getEnvironment()));
                     $this->doSqlInsert($manager, $output, $name);
                 }
             }
@@ -75,7 +75,7 @@ EOT
 
     protected function getSqlDir()
     {
-        return sprintf('%s/propel/sql', $this->getApplication()->getKernel()->getCacheDir());
+        return sprintf('%s/propel/sql', $this->kernel->getCacheDir());
     }
 
     /**

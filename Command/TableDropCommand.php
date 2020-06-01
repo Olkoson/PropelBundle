@@ -59,7 +59,7 @@ EOT
             $nbTable = count($tablesToDelete);
             $tablePlural = (($nbTable > 1 || $nbTable == 0) ? 's' : '' );
 
-            if ('prod' === $this->getApplication()->getKernel()->getEnvironment()) {
+            if ('prod' === $this->kernel->getEnvironment()) {
                 $count = (count($input->getArgument('table')) ?: 'all');
 
                 $this->writeSection(

@@ -120,9 +120,8 @@ EOT
         if (null !== $this->bundle) {
             $this->absoluteFixturesPath = $this->getFixturesPath($this->bundle);
         } else {
-            $kernel = $this->getApplication()->getKernel();
             $this->absoluteFixturesPath = realpath(
-                $this->getProjectDir($kernel).DIRECTORY_SEPARATOR.$input->getOption('dir')
+                $this->getProjectDir($this->kernel).DIRECTORY_SEPARATOR.$input->getOption('dir')
             );
         }
 
@@ -174,8 +173,7 @@ EOT
 
         list($name) = $this->getConnection($input, $output);
 
-        $kernel = $this->getApplication()->getKernel();
-        $projectDir = $this->getProjectDir($kernel);
+        $projectDir = $this->getProjectDir($this->kernel);
 
         if ('yml' === $type) {
             $loader = new YamlDataLoader($projectDir, $this->getContainer());
@@ -210,7 +208,7 @@ EOT
      */
     protected function loadSqlFixtures(InputInterface $input, OutputInterface $output)
     {
-        $tmpdir = $this->getApplication()->getKernel()->getCacheDir() . '/propel';
+        $tmpdir = $this->kernel->getCacheDir() . '/propel';
         $datas  = $this->getFixtureFiles('sql');
 
         $this->prepareCache($tmpdir);

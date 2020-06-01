@@ -604,7 +604,7 @@ EOT;
                 sprintf(
                     'Use connection named <comment>%s</comment> in <comment>%s</comment> environment.',
                     $name,
-                    $this->getApplication()->getKernel()->getEnvironment()
+                    $this->kernel->getEnvironment()
                 )
             );
             $this->alreadyWroteConnection = true;
