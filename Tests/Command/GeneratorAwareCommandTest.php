@@ -31,7 +31,8 @@ final class GeneratorAwareCommandTest extends TestCase
         $parameterBag = new ParameterBag(
             [
                 'kernel.debug' => false,
-                'kernel.root_dir' => __DIR__.'/../',
+                'kernel.root_dir' => dir(__DIR__),
+                'kernel.project_dir' => __DIR__,
                 'propel.path' => __DIR__.'/../../vendor/propel/propel1'
             ]
         );
@@ -51,7 +52,7 @@ final class GeneratorAwareCommandTest extends TestCase
             $propelConfig
         );
 
-        $databases = $command->getDatabasesFromSchema(new \SplFileInfo(__DIR__.'/../Fixtures/schema.xml'));
+        $databases = $command->getDatabasesFromSchema(new \SplFileInfo(dir(__DIR__).'/Fixtures/schema.xml'));
 
         $this->assertTrue(is_array($databases));
 

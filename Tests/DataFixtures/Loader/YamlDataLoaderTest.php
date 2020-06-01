@@ -343,10 +343,23 @@ YAML;
         $book = $books[0];
         $this->assertNotNull($book->getName());
         $this->assertNotEquals('null', strtolower($book->getName()));
-        $this->assertRegexp('#[a-z]+#', $book->getName());
+
+        // PHPUnit 9 compatibility fix
+        if (!method_exists('assertMatchesRegularExpression', $this)) {
+            $this->assertRegexp('#[a-z]+#', $book->getName());
+        } else {
+            $this->assertMatchesRegularExpression('#[a-z]+#', $book->getName());
+        }
+        
         $this->assertNotNull($book->getDescription());
         $this->assertNotEquals('null', strtolower($book->getDescription()));
-        $this->assertRegexp('#[\w ]+#', $book->getDescription());
+
+        // PHPUnit 9 compatibility fix
+        if (!method_exists('assertMatchesRegularExpression', $this)) {
+            $this->assertRegexp('#[\w ]+#', $book->getDescription());
+        } else {
+            $this->assertMatchesRegularExpression('#[\w ]+#', $book->getDescription());
+        }
     }
 
     public function testLoadWithFakerDateTime()
