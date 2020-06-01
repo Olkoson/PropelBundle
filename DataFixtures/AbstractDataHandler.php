@@ -35,7 +35,7 @@ abstract class AbstractDataHandler
     /**
      * Default constructor
      *
-     * @param string $rootDir The root directory.
+     * @param string $rootDir The Project root directory.
      */
     public function __construct($rootDir)
     {
@@ -137,10 +137,10 @@ abstract class AbstractDataHandler
         if (!empty($configuration['datasources'][$connectionName]['connection']['model_paths'])) {
             $modelPaths = $configuration['datasources'][$connectionName]['connection']['model_paths'];
             foreach ($modelPaths as $modelPath) {
-                $searchPath[] = $this->getRootDir() . '/../' . $modelPath;
+                $searchPath[] = $this->getRootDir() . DIRECTORY_SEPARATOR . $modelPath;
             }
         } else {
-            $searchPath[] = $this->getRootDir() . '/../';
+            $searchPath[] = $this->getRootDir() . DIRECTORY_SEPARATOR;
         }
 
         return $searchPath;

@@ -14,6 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * FixturesDumpCommand.
@@ -61,7 +62,9 @@ EOT
         list($name, $defaultConfig) = $this->getConnection($input, $output);
         $fixtureDir = $input->getOption('dir') ? $input->getOption('dir') : $this->defaultFixturesDir;
 
-        $path = realpath($this->getApplication()->getKernel()->getRootDir() . '/../') . '/' . $fixtureDir;
+        $kernel = $this->getApplication()->getKernel();
+
+        $path = realpath($this->getProjectDir($kernel)) . DIRECTORY_SEPARATOR . $fixtureDir;
 
         if (!file_exists($path)) {
             $output->writeln("<info>The $path folder does not exists.</info>");
@@ -75,7 +78,7 @@ EOT
 
         $filename = $path . '/fixtures_' . time() . '.yml';
 
-        $dumper = new YamlDataDumper($this->getApplication()->getKernel()->getRootDir());
+        $dumper = new YamlDataDumper($this->getProjectDir($kernel));
 
         try {
             $dumper->dump($filename, $name);

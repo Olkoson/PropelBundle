@@ -5,11 +5,19 @@ In order to use Propel, you have to configure few parameters in your `app/config
 
 If you are **not** using Composer, add this configuration:
 
+Symfony < 4.2
 ``` yaml
 # in app/config/config.yml
 propel:
     path:       "%kernel.root_dir%/../vendor/propel"
     phing_path: "%kernel.root_dir%/../vendor/phing"
+```
+Symfony >= 4.2
+``` yaml
+# in app/config/config.yml
+propel:
+    path:       "%kernel.project_dir%/vendor/propel"
+    phing_path: "%kernel.project_dir%/vendor/phing"
 ```
 
 Now, you can configure your application.

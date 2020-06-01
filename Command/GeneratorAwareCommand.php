@@ -7,6 +7,7 @@
  *
  * @license    MIT License
  */
+
 namespace Propel\Bundle\PropelBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -46,7 +47,11 @@ abstract class GeneratorAwareCommand extends AbstractCommand
 
         $config = new \QuickGeneratorConfig();
 
-        if (file_exists($propelIni = $this->parameterBag->get('kernel.root_dir').'/config/propel.ini')) {
+        $kernel = $this->getApplication()->getKernel();
+
+        $propelIni = $this->getConfigDir($kernel).DIRECTORY_SEPARATOR.'propel.ini';
+
+        if (file_exists($propelIni)) {
             foreach ($this->getProperties($propelIni) as $key => $value) {
                 if (0 === strpos($key, 'propel.')) {
                     $newKey = substr($key, strlen('propel.'));

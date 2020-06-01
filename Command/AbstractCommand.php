@@ -286,7 +286,7 @@ abstract class AbstractCommand extends Command
             $filesystem->mkdir($cacheDir);
         }
 
-        $base = ltrim(realpath($kernel->getRootDir().'/..'), DIRECTORY_SEPARATOR);
+        $base = ltrim(realpath($this->getProjectDir($kernel)), DIRECTORY_SEPARATOR);
 
         $finalSchemas = $this->getFinalSchemas($kernel, $this->bundle);
         foreach ($finalSchemas as $schema) {
@@ -393,14 +393,14 @@ abstract class AbstractCommand extends Command
     }
 
     /**
-     * @param  \SplFileInfo $file
+     * @param \SplFileInfo $file
      *
      * @return string
      */
     protected function getRelativeFileName(\SplFileInfo $file)
     {
         return substr(
-            str_replace(realpath($this->parameterBag->get('kernel.root_dir').'/../'), '', $file),
+            str_replace(realpath($this->getProjectDir($this->kernel)), '', $file),
             1
         );
     }
@@ -414,13 +414,54 @@ abstract class AbstractCommand extends Command
     protected function createBuildPropertiesFile(KernelInterface $kernel, $file)
     {
         $filesystem = new Filesystem();
-        $buildPropertiesFile = $kernel->getRootDir().'/config/propel.ini';
+
+        $buildPropertiesFile = $this->getConfigDir($kernel).DIRECTORY_SEPARATOR.'propel.ini';
 
         if (file_exists($buildPropertiesFile)) {
             $filesystem->copy($buildPropertiesFile, $file);
         } else {
             $filesystem->touch($file);
         }
+    }
+
+    /**
+     * @param KernelInterface $kernel
+     * @return string
+     */
+    protected function getConfigDir(KernelInterface $kernel)
+    {
+        $projectDir = $this->getProjectDir($kernel);
+
+        return $this->isFlex($kernel)
+            ? $projectDir.DIRECTORY_SEPARATOR.'config'
+            : $projectDir.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'config';
+    }
+
+    /**
+     * Path to config in flex directory structure can't be changed
+     *
+     * @param KernelInterface $kernel
+     * @return bool
+     */
+    protected function isFlex(KernelInterface $kernel)
+    {
+        $projectDir = $this->getProjectDir($kernel);
+
+        return file_exists($projectDir.DIRECTORY_SEPARATOR.'config');
+    }
+
+    /**
+     * @param KernelInterface $kernel
+     * @return string
+     */
+    protected function getProjectDir(KernelInterface $kernel): string
+    {
+        // kernel.root_dir` and `Kernel::getRootDir() are deprecated since SF 4.2
+        $projectDir = (method_exists($kernel, 'getProjectDir')
+            ? $kernel->getProjectDir()
+            : $kernel->getRootDir().DIRECTORY_SEPARATOR.'..');
+
+        return $projectDir;
     }
 
     /**
@@ -729,13 +770,16 @@ EOT;
     {
         $args = array();
 
+        $outputDir = $this->getConfigDir($kernel)
+            .($this->isFlex($kernel) ? '' : DIRECTORY_SEPARATOR.'..').DIRECTORY_SEPARATOR.'propel';
+
         // Default properties
         $properties = array_merge(
             array(
                 'propel.database' => 'mysql',
                 'project.dir' => $workingDirectory,
-                'propel.output.dir' => $kernel->getRootDir().'/propel',
-                'propel.php.dir' => $kernel->getRootDir().'/..',
+                'propel.output.dir' => $outputDir,
+                'propel.php.dir' => $this->getProjectDir($kernel),
                 'propel.packageObjectModel' => true,
                 'propel.useDateTimeClass' => true,
                 'propel.dateTimeClass' => 'DateTime',

@@ -120,7 +120,10 @@ EOT
         if (null !== $this->bundle) {
             $this->absoluteFixturesPath = $this->getFixturesPath($this->bundle);
         } else {
-            $this->absoluteFixturesPath = realpath($this->getApplication()->getKernel()->getRootDir() . '/../' . $input->getOption('dir'));
+            $kernel = $this->getApplication()->getKernel();
+            $this->absoluteFixturesPath = realpath(
+                $this->getProjectDir($kernel).DIRECTORY_SEPARATOR.$input->getOption('dir')
+            );
         }
 
         if (!$this->absoluteFixturesPath && !file_exists($this->absoluteFixturesPath)) {
@@ -171,10 +174,13 @@ EOT
 
         list($name) = $this->getConnection($input, $output);
 
+        $kernel = $this->getApplication()->getKernel();
+        $projectDir = $this->getProjectDir($kernel);
+
         if ('yml' === $type) {
-            $loader = new YamlDataLoader($this->getApplication()->getKernel()->getRootDir(), $this->getContainer());
+            $loader = new YamlDataLoader($projectDir, $this->getContainer());
         } elseif ('xml' === $type) {
-            $loader = new XmlDataLoader($this->getApplication()->getKernel()->getRootDir());
+            $loader = new XmlDataLoader($projectDir);
         } else {
             return 0;
         }

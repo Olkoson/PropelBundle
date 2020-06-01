@@ -34,11 +34,16 @@ class PropelExtension extends Extension
         $configuration = $this->getConfiguration($configs, $container);
         $config = $processor->processConfiguration($configuration, $configs);
 
+        // kernel.root_dir` and `Kernel::getRootDir() are deprecated since SF 4.2
+        $projectDir = $container->hasParameter('kernel.project_dir')
+            ? ($container->getParameter('kernel.project_dir')).PATH_SEPARATOR
+            : ($container->getParameter('kernel.root_dir').DIRECTORY_SEPARATOR.'..'.PATH_SEPARATOR);
+
         // Composer
-        if (file_exists($propelPath = $container->getParameter('kernel.root_dir') . '/../vendor/propel/propel1')) {
+        if (file_exists($propelPath = $projectDir . '/vendor/propel/propel1')) {
             $container->setParameter('propel.path', $propelPath);
         }
-        if (file_exists($phingPath = $container->getParameter('kernel.root_dir') . '/../vendor/phing/phing/classes')) {
+        if (file_exists($phingPath = $projectDir . '/vendor/phing/phing/classes')) {
             $container->setParameter('propel.phing_path', $phingPath);
         }
 
@@ -64,7 +69,7 @@ class PropelExtension extends Extension
 
         // Load services
         if (!$container->hasDefinition('propel')) {
-            $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+            $loader = new XmlFileLoader($container, new FileLocator(dirname(__DIR__).'/Resources/config'));
             $loader->load('propel.xml');
             $loader->load('converters.xml');
         }

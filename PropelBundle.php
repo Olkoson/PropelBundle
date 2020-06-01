@@ -27,9 +27,14 @@ class PropelBundle extends Bundle
     {
         require_once $this->container->getParameter('propel.path').'/runtime/lib/Propel.php';
 
+        // kernel.root_dir` and `Kernel::getRootDir() are deprecated since SF 4.2
+        $projectDir = $this->container->hasParameter('kernel.project_dir')
+            ? ($this->container->getParameter('kernel.project_dir'))
+            : ($this->container->getParameter('kernel.root_dir').DIRECTORY_SEPARATOR.'..'.PATH_SEPARATOR);
+
         if (0 === strncasecmp(PHP_SAPI, 'cli', 3)) {
             set_include_path(
-                $this->container->getParameter('kernel.root_dir').DIRECTORY_SEPARATOR.'..'.PATH_SEPARATOR.
+                $projectDir.PATH_SEPARATOR.
                 $this->container->getParameter('propel.phing_path').PATH_SEPARATOR.
                 $this->container->getParameter('propel.phing_path').DIRECTORY_SEPARATOR.'classes'.PATH_SEPARATOR.
                 get_include_path()
