@@ -345,17 +345,17 @@ YAML;
         $this->assertNotEquals('null', strtolower($book->getName()));
 
         // PHPUnit 9 compatibility fix
-        if (!method_exists('assertMatchesRegularExpression', $this)) {
+        if (!method_exists($this, 'assertMatchesRegularExpression')) {
             $this->assertRegexp('#[a-z]+#', $book->getName());
         } else {
             $this->assertMatchesRegularExpression('#[a-z]+#', $book->getName());
         }
-        
+
         $this->assertNotNull($book->getDescription());
         $this->assertNotEquals('null', strtolower($book->getDescription()));
 
         // PHPUnit 9 compatibility fix
-        if (!method_exists('assertMatchesRegularExpression', $this)) {
+        if (!method_exists($this, 'assertMatchesRegularExpression')) {
             $this->assertRegexp('#[\w ]+#', $book->getDescription());
         } else {
             $this->assertMatchesRegularExpression('#[\w ]+#', $book->getDescription());
