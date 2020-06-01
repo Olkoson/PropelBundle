@@ -22,8 +22,14 @@ final class GeneratorAwareCommandTest extends TestCase
     public function testGetDatabasesFromSchema()
     {
         $kernel = $this
-            ->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')
+            ->getMockBuilder('Symfony\Component\HttpKernel\Kernel')
+            ->disableOriginalConstructor()
+            ->onlyMethods(array('getProjectDir', 'registerBundles', 'registerContainerConfiguration'))
             ->getMock();
+
+        $kernel->method('getProjectDir')
+            ->willReturn('.');
+
         $fileLocator = $this
             ->getMockBuilder('Symfony\Component\Config\FileLocator')
             ->getMock();
