@@ -36,8 +36,8 @@ class PropelExtension extends Extension
 
         // kernel.root_dir` and `Kernel::getRootDir() are deprecated since SF 4.2
         $projectDir = $container->hasParameter('kernel.project_dir')
-            ? ($container->getParameter('kernel.project_dir')).PATH_SEPARATOR
-            : ($container->getParameter('kernel.root_dir').DIRECTORY_SEPARATOR.'..'.PATH_SEPARATOR);
+            ? ($container->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR
+            : ($container->getParameter('kernel.root_dir').DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR);
 
         // Composer
         if (file_exists($propelPath = $projectDir . '/vendor/propel/propel1')) {
