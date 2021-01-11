@@ -24,7 +24,7 @@ class ReverseCommand extends AbstractCommand
     /**
      * @see Command
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Generate XML schema from reverse-engineered database')
@@ -79,6 +79,10 @@ EOT
             }
         } else {
             $this->writeTaskError($output, 'reverse');
+
+            return 1;
         }
+
+        return 0;
     }
 }

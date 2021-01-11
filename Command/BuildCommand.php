@@ -25,7 +25,7 @@ class BuildCommand extends AbstractCommand
     /**
      * @see Command
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Hub for Propel build commands (Model classes, SQL)')
@@ -75,5 +75,7 @@ class BuildCommand extends AbstractCommand
             $insertCommand = $this->getApplication()->find('propel:sql:insert');
             $insertCommand->run($in, $output);
         }
+
+        return 0;
     }
 }

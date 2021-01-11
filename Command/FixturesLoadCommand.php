@@ -47,7 +47,7 @@ class FixturesLoadCommand extends AbstractCommand
     /**
      * @see Command
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Load XML, SQL and/or YAML fixtures')
@@ -150,6 +150,8 @@ EOT
                 $output->writeln('No <info>YML</info> fixtures found.');
             }
         }
+
+        return 0;
     }
 
     /**

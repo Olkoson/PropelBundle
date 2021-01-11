@@ -26,7 +26,7 @@ class SqlBuildCommand extends AbstractCommand
     /**
      * @see Command
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Build the SQL generation code for all tables based on Propel XML schemas')
@@ -48,6 +48,8 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $status = 1;
+
         $finder = new Finder();
         $filesystem = new Filesystem();
 
@@ -90,7 +92,11 @@ EOT
                 '',
                 'An error has occured during the "propel:sql:build" command process. To get more details, run the command with the "--verbose" option.',
             ), 'fg=white;bg=red');
+
+            $status = 1;
         }
+
+        return $status;
     }
 
     /**

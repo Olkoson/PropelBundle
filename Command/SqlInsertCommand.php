@@ -23,7 +23,7 @@ class SqlInsertCommand extends AbstractCommand
     /**
      * @see Command
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Insert SQL for current model')
@@ -71,6 +71,8 @@ EOT
         } else {
             $output->writeln('<error>You have to use --force to execute all SQL statements.</error>');
         }
+
+        return 0;
     }
 
     protected function getSqlDir()

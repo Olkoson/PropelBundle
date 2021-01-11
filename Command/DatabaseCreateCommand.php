@@ -24,7 +24,7 @@ class DatabaseCreateCommand extends AbstractCommand
     /**
      * @see Command
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Create a given database or the default one.')
@@ -48,6 +48,8 @@ class DatabaseCreateCommand extends AbstractCommand
             $query  = 'CREATE DATABASE '. $dbName .';';
         }
 
+        $status = 0;
+
         try {
             \Propel::setConfiguration($this->getTemporaryConfiguration($name, $config));
             $connection = \Propel::getConnection($name);
@@ -62,7 +64,11 @@ class DatabaseCreateCommand extends AbstractCommand
                 '',
                 $e->getMessage()
             ), 'fg=white;bg=red');
+
+            $status = 1;
         }
+
+        return $status;
     }
 
     /**

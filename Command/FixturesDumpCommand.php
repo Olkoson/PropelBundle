@@ -32,7 +32,7 @@ class FixturesDumpCommand extends AbstractCommand
     /**
      * @see Command
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Dump data from database into YAML fixtures file.')
@@ -86,11 +86,11 @@ EOT
                 '',
                 $e->getMessage()), 'fg=white;bg=red');
 
-            return false;
+            return 1;
         }
 
         $this->writeNewFile($output, $filename);
 
-        return true;
+        return 0;
     }
 }

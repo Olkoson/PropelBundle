@@ -23,7 +23,7 @@ class MigrationMigrateCommand extends AbstractCommand
     /**
      * @see Command
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Executes the next migrations up')
@@ -63,5 +63,7 @@ EOT
         }
 
         $this->writeSummary($output, 'propel-migration');
+
+        return 0;
     }
 }

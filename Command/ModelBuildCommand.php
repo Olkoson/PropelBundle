@@ -25,7 +25,7 @@ class ModelBuildCommand extends AbstractCommand
     /**
      * @see Command
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Build the Propel Object Model classes based on XML schemas')
@@ -59,5 +59,7 @@ EOT
         } else {
             $this->writeTaskError($output, 'om');
         }
+
+        return 0;
     }
 }

@@ -22,7 +22,7 @@ class GraphvizGenerateCommand extends AbstractCommand
     /**
      * @see Command
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Generates Graphviz file for your project')
@@ -51,5 +51,7 @@ EOT
         ));
 
         $this->writeNewDirectory($output, $dest);
+
+        return 0;
     }
 }

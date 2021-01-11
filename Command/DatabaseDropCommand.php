@@ -24,7 +24,7 @@ class DatabaseDropCommand extends AbstractCommand
     /**
      * @see Command
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Drop a given database or the default one.')
@@ -50,6 +50,8 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $status = 0;
+
         if ($input->getOption('force')) {
             if ('prod' === $this->kernel->getEnvironment()) {
                 $this->writeSection($output, 'WARNING: you are about to drop a database in production !', 'bg=red;fg=white');
@@ -82,9 +84,13 @@ EOT
                     '',
                     $e->getMessage()
                 ), 'fg=white;bg=red');
+
+                $status = 1;
             }
         } else {
             $output->writeln('<error>You have to use the "--force" option to drop the database.</error>');
         }
+
+        return $status;
     }
 }

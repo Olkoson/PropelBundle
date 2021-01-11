@@ -23,7 +23,7 @@ class MigrationGenerateDiffCommand extends AbstractCommand
     /**
      * @see Command
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Generates SQL diff between the XML schemas and the current database structure')
@@ -45,16 +45,26 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $status = 0;
+
         if (true === $this->callPhing('diff')) {
             $this->writeSummary($output, 'propel-sql-diff');
+
+            $status = 0;
         } elseif ( strpos( $this->buffer, 'Uncommitted migrations have been found' ) ) {
             $this->writeSection($output, array(
                 '[Propel] Error',
                 '',
                 'Uncommitted migrations have been found. You should either execute or delete them before rerunning the propel:migration:generate-diff command.'
             ), 'fg=white;bg=red');
+
+            $status = 1;
         } else {
             $this->writeTaskError($output, 'propel-sql-diff');
+
+            $status = 2;
         }
+
+        return $status;
     }
 }

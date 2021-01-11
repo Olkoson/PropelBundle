@@ -22,7 +22,7 @@ class MigrationStatusCommand extends AbstractCommand
     /**
      * @see Command
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Lists the migrations yet to be executed')
@@ -46,5 +46,7 @@ EOT
         $this->callPhing('status');
 
         $this->writeSummary($output, 'propel-migration-status');
+
+        return 0;
     }
 }

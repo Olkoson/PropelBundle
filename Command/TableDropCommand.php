@@ -25,7 +25,7 @@ class TableDropCommand extends AbstractCommand
     /**
      * @see Command
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Drop a given table or all tables in the database.')
@@ -54,6 +54,8 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $tablesToDelete = $input->getArgument('table');
+
+        $status = 0;
 
         if ($input->getOption('force')) {
             $nbTable = count($tablesToDelete);
@@ -116,9 +118,13 @@ EOT
                     '',
                     $e->getMessage()
                 ), 'fg=white;bg=red');
+
+                $status = 1;
             }
         } else {
             $output->writeln('<error>You have to use the "--force" option to drop some tables.</error>');
         }
+
+        return $status;
     }
 }
