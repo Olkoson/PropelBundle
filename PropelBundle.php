@@ -30,7 +30,7 @@ class PropelBundle extends Bundle
         // kernel.root_dir` and `Kernel::getRootDir() are deprecated since SF 4.2
         $projectDir = $this->container->hasParameter('kernel.project_dir')
             ? ($this->container->getParameter('kernel.project_dir'))
-            : ($this->container->getParameter('kernel.root_dir').DIRECTORY_SEPARATOR.'..'.PATH_SEPARATOR);
+            : ($this->container->getParameter('kernel.root_dir').DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR);
 
         if (0 === strncasecmp(PHP_SAPI, 'cli', 3)) {
             set_include_path(
