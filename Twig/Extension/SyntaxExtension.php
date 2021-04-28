@@ -9,6 +9,9 @@
  */
 namespace Propel\Bundle\PropelBundle\Twig\Extension;
 
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+
 /**
  * SyntaxExtension class
  *
@@ -16,21 +19,23 @@ namespace Propel\Bundle\PropelBundle\Twig\Extension;
  * @subpackage Extension
  * @author William DURAND <william.durand1@gmail.com>
  */
-class SyntaxExtension extends \Twig_Extension
+class SyntaxExtension extends AbstractExtension
 {
-    public function getFilters()
+    /**
+     * @return TwigFilter[]
+     */
+    public function getFilters(): array
     {
         return array(
-            new \Twig_SimpleFilter('format_sql', array($this, 'formatSQL'), array('is_safe' => array('html'))),
+            new TwigFilter('format_sql', array($this, 'formatSQL'), array('is_safe' => array('html'))),
         );
     }
 
-    public function getName()
-    {
-        return 'propel_syntax_extension';
-    }
-
-    public function formatSQL($sql)
+    /**
+     * @param string $sql
+     * @return string
+     */
+    public function formatSQL(string $sql): string
     {
         // list of keywords to prepend a newline in output
         $newlines = array(
@@ -75,19 +80,23 @@ class SyntaxExtension extends \Twig_Extension
             'OFFSET',
         ));
 
-        $sql = preg_replace(array(
-            '/\b('.implode('|', $newlines).')\b/',
-            '/\b('.implode('|', $keywords).')\b/',
-            '/(\/\*.*\*\/)/',
-            '/(`[^`.]*`)/',
-            '/(([0-9a-zA-Z$_]+)\.([0-9a-zA-Z$_]+))/',
-        ), array(
-            '<br />\\1',
-            '<span class="SQLKeyword">\\1</span>',
-            '<span class="SQLComment">\\1</span>',
-            '<span class="SQLName">\\1</span>',
-            '<span class="SQLName">\\1</span>',
-        ), $sql);
+        $sql = preg_replace(
+            array(
+                '/\b('.implode('|', $newlines).')\b/',
+                '/\b('.implode('|', $keywords).')\b/',
+                '/(\/\*.*\*\/)/',
+                '/(`[^`.]*`)/',
+                '/(([0-9a-zA-Z$_]+)\.([0-9a-zA-Z$_]+))/',
+            ),
+            array(
+                '<br />\\1',
+                '<span class="SQLKeyword">\\1</span>',
+                '<span class="SQLComment">\\1</span>',
+                '<span class="SQLName">\\1</span>',
+                '<span class="SQLName">\\1</span>',
+            ),
+            $sql
+        );
 
         return $sql;
     }
